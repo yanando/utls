@@ -491,17 +491,19 @@ func (hs *clientHandshakeStateTLS13) readServerCertificate() error {
 	case *certificateMsgTLS13:
 		certMsg, rawCertMsg = v, v.marshal()
 	case *compressedCertificateMsg:
-		var algOk bool
-		for _, alg := range hs.certCompAlgs {
-			if alg == v.algorithm {
-				algOk = true
-				break
-			}
-		}
-		if !algOk {
-			c.sendAlert(alertUnexpectedMessage)
-			return unexpectedMessageError(certMsg, msg)
-		}
+		// Edited to fix cloudflare sites
+		// var algOk bool
+		// for _, alg := range hs.certCompAlgs {
+		// 	if alg == v.algorithm {
+		// 		algOk = true
+		// 		break
+		// 	}
+		// }
+		// if !algOk {
+		// 	c.sendAlert(alertUnexpectedMessage)
+		// 	return unexpectedMessageError(certMsg, msg)
+		// }
+		// end edit
 		certMsg, err = v.toCertificateMsg()
 		if err != nil {
 			c.sendAlert(alertBadCertificate)
